@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Predictor</title>
+    <!-- We are loading Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Using the Inter font for a clean, professional look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-indigo-400">CarPrice AI</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Predictor</a>
+                        <a href="/about" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
+                        <a href="/contact" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="mt-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-white">Car Price Prediction</h1>
+                <p class="mt-4 text-lg text-gray-400">Enter the details of a car to get an estimated selling price.</p>
+            </div>
+
+            <!-- Prediction Form -->
+            <form action="/" method="post" class="bg-gray-800 p-8 rounded-lg shadow-2xl space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Brand -->
+                    <div>
+                        <label for="brand" class="block text-sm font-medium text-gray-300">Brand</label>
+                        <select id="brand" name="brand" required class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            {% for b in brands %}
+                            <option value="{{ b }}">{{ b }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Car Age -->
+                    <div>
+                        <label for="car_age" class="block text-sm font-medium text-gray-300">Age of the Car (in years)</label>
+                        <input type="number" id="car_age" name="car_age" min="0" max="30" required class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 5">
+                    </div>
+
+                    <!-- Kilometers Driven -->
+                    <div>
+                        <label for="km_driven" class="block text-sm font-medium text-gray-300">Kilometers Driven</label>
+                        <input type="number" id="km_driven" name="km_driven" min="0" required class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 40000">
+                    </div>
+                    
+                    <!-- Fuel Type -->
+                    <div>
+                        <label for="fuel" class="block text-sm font-medium text-gray-300">Fuel Type</label>
+                        <select id="fuel" name="fuel" required class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            {% for f in fuels %}
+                            <option value="{{ f }}">{{ f }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Seller Type -->
+                    <div>
+                        <label for="seller_type" class="block text-sm font-medium text-gray-300">Seller Type</label>
+                        <select id="seller_type" name="seller_type" required class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                           {% for s in sellers %}
+                            <option value="{{ s }}">{{ s }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Transmission -->
+                    <div>
+                        <label for="transmission" class="block text-sm font-medium text-gray-300">Transmission</label>
+                        <select id="transmission" name="transmission" required class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            {% for t in transmissions %}
+                            <option value="{{ t }}">{{ t }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <!-- Owner Type -->
+                <div class="pt-2">
+                    <label class="block text-sm font-medium text-gray-300">Number of Previous Owners</label>
+                    <div class="mt-2 flex flex-wrap gap-4">
+                        {% for o in owners %}
+                        <div class="flex items-center">
+                            <input id="owner-{{ loop.index }}" name="owner" type="radio" value="{{ o }}" required class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            <label for="owner-{{ loop.index }}" class="ml-3 block text-sm font-medium text-gray-300">{{ o }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="pt-4">
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Predict Price
+                    </button>
+                </div>
+            </form>
+
+            <!-- Prediction Result -->
+            {% if prediction_text %}
+            <div class="mt-12 text-center">
+                <h2 class="text-3xl font-bold text-white">Prediction Result</h2>
+                <div class="mt-4 bg-gray-800 inline-block p-6 rounded-lg shadow-xl border border-indigo-500">
+                    <p class="text-4xl font-extrabold text-indigo-400">{{ prediction_text }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="w-full max-w-7xl mx-auto text-center py-6 mt-12 text-gray-500 text-sm">
+        <p>&copy; 2024 Car Price Predictor. A Machine Learning Project.</p>
+    </footer>
+
+</body>
+</html>
+
